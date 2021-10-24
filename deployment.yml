@@ -1,0 +1,97 @@
+deployment.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: cloudacademy
+  labels:
+    role: frontend
+    env: demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      role: frontend
+  template:
+    metadata:
+      labels:
+        role: frontend
+    spec:
+      containers:
+      #CODE2.0:
+      #add the NGINX container to the pod - configure it to mount the nginx.conf file stored in the nginx-conf configMap 
+      - name: nginx
+        image: nginx:1.13.7
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: http
+          containerPort: 80
+        volumeMounts:
+        - name: nginx-proxy-config
+          mountPath: /etc/nginx/conf.d/default.conf
+          subPath: nginx.conf
+      #CODE2.1:
+      #add the FLASK container to the pod
+      - name: flask
+        image: cloudacademydevops/flaskapp
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: http
+          containerPort: 5000
+        env:
+        - name: APP_NAME
+          value: CloudAcademy.DevOps.K8s.Manifest
+      volumes:
+      #CODE2.2:
+      #reference the nginx-conf configMap - this will be mounted into the NGINX container
+      - name: nginx-proxy-config
+        configMap:
+          name: nginx-conf
+
+
+--
+Edit and update the deployment.yaml manifest file by adding the following directly beneath the #Code2.0 comment block:
+
+Copy code
+#CODE2.0:
+#add the NGINX container to the pod - configure it to mount the nginx.conf file stored in the nginx-conf configMap 
+- name: nginx
+  image: nginx:1.13.7
+  imagePullPolicy: IfNotPresent
+  ports:
+  - name: http
+    containerPort: 80
+  volumeMounts:
+  - name: nginx-proxy-config
+    mountPath: /etc/nginx/conf.d/default.conf
+    subPath: nginx.conf
+This provides the NGINX web server container configuration. Notice how it mounts the NGINX config stored in the respective ConfigMap resource you created in the previous  Step.
+
+Add the FLASKAPP container configuration. 
+
+Note: The container image tag name cloudacademydevops/flask referenced here is intentionally wrong. You will learn how to troubleshoot and fix this in the following steps.
+
+Edit and update the deployment.yaml manifest file by adding the following directly beneath the #Code2.1 comment block:
+
+Copy code
+#CODE2.1:
+#add the FLASK container to the pod
+- name: flask
+  image: cloudacademydevops/flaskapp
+  imagePullPolicy: IfNotPresent
+  ports:
+  - name: http
+    containerPort: 5000
+  env:
+  - name: APP_NAME
+    value: CloudAcademy.DevOps.K8s.Manifest
+This provides the FLASKAPP web server container configuration. Notice how it uses an environment variable named APP_NAME to store a string that will be used in the HTTP response at runtime - this container is based on the custom Docker image you created in the first Lab Step.
+
+4. Edit and update the deployment.yaml manifest file by adding the following directly beneath the #Code2.2 comment block:
+
+Copy code
+#CODE2.2:
+#reference the nginx-conf configMap - this will be mounted into the NGINX container
+- name: nginx-proxy-config
+  configMap:
+    name: nginx-conf
