@@ -1,0 +1,17 @@
+In this proj scenario you'll work with 2 containers. An NGINX web server container will be configured to proxy incoming HTTP requests downstream to another container running a customised FLASK based web application. The NGINX web server container will use the publicly available nginx:1.13.7 image. The FLASK based web application container will be based on a custom docker image that you will need to first create. 
+
+This proj will teach you how to create a ConfigMap manifest file, and a Deployment manifest file. You will then use the kubectl apply command to create both resources within a Kubernetes cluster. You'll then learn how to use Helm to reconstruct the entire deployment using templates, allowing you to create and deploy environment specific versions, dev and prod, of the deployment within the cluster.
+
+ Work with a Kubenetes 1.22 cluster
+Work with Helm 3
+Use the docker build command to build a new Docker Image and tag it with cloudacademydevops/flaskapp:latest
+Update and edit a nginx.configmap.yaml manifest to create a Deployment resource
+Update and edit a deployment.yaml manifest to create a ConfigMap resource
+Use the kubectl apply command to perform a deployment using the updated manifest files into the Kubernetes cluster
+Update and edit a Helm deployment.yaml template 
+Update and edit a Helm values.yaml file
+Use the helm template command together with the kubectl apply command to perform a deployment using templates into the Kubernetes cluster
+Create and edit Helm environment specific value files: values.dev.yaml and values.prod.yaml
+Use the helm template command together with the kubectl apply command to perform a dev deployment into the Kubernetes cluster
+Use the helm template command together with the kubectl apply command to perform a prod deployment into the Kubernetes cluster
+Test and validate the container setup using the curl command
